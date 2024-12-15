@@ -12,9 +12,11 @@ y = df["Survived"]
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
 
+test_id = x_test["PassengerId"]
+
 sc = StandardScaler()
 x_train = sc.fit_transform(x_train)
-x_train = sc.fit_transform(x_test)
+x_test = sc.transform(x_test)
 
 #створюємо класифікатор KNN
 knn = KNeighborsClassifier(n_neighbors=5)
@@ -22,9 +24,10 @@ knn = KNeighborsClassifier(n_neighbors=5)
 #проводимо навчання моделі
 knn.fit(x_train, y_train)
 
-y_predict = knn.predict(x_text)
+y_predict = knn.predict(x_test)
+
+result = pd.DataFrame({"PassengerId": test_id, "Predict": y_predict})
+result.to_csv("predict.csv", index=False)
 
 accuracy = accuracy_score(y_predict, y_test) * 100
-
-
 print("Точність прогнозу:", accuracy)
